@@ -1,0 +1,496 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><title>SAT Diagnostic Test 1</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --paper: #F7F8FA; --surface: #FFFFFF; --ink: #1C1F26; --muted: #5A6170;
+    --line: #D8DCE3; --line-soft: #E7EAEF;
+    --accent: #2B4C9B; --accent-ink: #FFFFFF; --accent-soft: #E9EEF9;
+    --warn: #B4690E; --danger: #B3261E; --danger-soft: #F9ECEB;
+    --lock: #6B7280; --ok: #2E6B46; --ok-soft: #E8F2EC;
+    --shadow: 0 1px 3px rgba(28,31,38,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #14161B; --surface: #1C1F26; --ink: #E8EAEF; --muted: #9AA1AE;
+      --line: #363B47; --line-soft: #2A2E38;
+      --accent: #7C9BE8; --accent-ink: #10131A; --accent-soft: #232B3E;
+      --warn: #E0A458; --danger: #E8837B; --danger-soft: #3A2523;
+      --lock: #8B93A1; --ok: #7FBF9A; --ok-soft: #1F3128;
+      --shadow: 0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14161B; --surface: #1C1F26; --ink: #E8EAEF; --muted: #9AA1AE;
+    --line: #363B47; --line-soft: #2A2E38;
+    --accent: #7C9BE8; --accent-ink: #10131A; --accent-soft: #232B3E;
+    --warn: #E0A458; --danger: #E8837B; --danger-soft: #3A2523;
+    --lock: #8B93A1; --ok: #7FBF9A; --ok-soft: #1F3128;
+    --shadow: 0 1px 3px rgba(0,0,0,.4);
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--paper); color: var(--ink); margin: 0;
+    font-family: 'IBM Plex Serif', Georgia, serif; font-size: 17px; line-height: 1.55; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 24px 20px 90px; }
+  h1 { font-family: 'IBM Plex Sans', Helvetica, Arial, sans-serif; font-size: 26px; line-height: 1.2;
+    margin: 8px 0 4px; text-wrap: balance; }
+  .sub { color: var(--muted); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; margin: 0 0 20px; }
+
+  /* sticky status bar */
+  .bar { position: sticky; top: 0; z-index: 20; background: var(--surface);
+    border-bottom: 1px solid var(--line); box-shadow: var(--shadow); display: none; }
+  .bar-inner { max-width: 720px; margin: 0 auto; padding: 10px 20px; display: flex;
+    align-items: center; gap: 14px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; }
+  .bar .sec-name { font-weight: 600; flex: 1; min-width: 0; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; }
+  .bar .answered { color: var(--muted); white-space: nowrap; }
+  .clock { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;
+    font-weight: 600; font-size: 18px; padding: 3px 10px; border-radius: 6px;
+    background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+  .clock.warn { background: transparent; color: var(--warn); outline: 1.5px solid var(--warn); }
+  .clock.danger { background: var(--danger-soft); color: var(--danger); outline: 1.5px solid var(--danger); }
+  .clock.ot { background: transparent; color: var(--lock); outline: 1.5px dashed var(--lock);
+    font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .04em; }
+
+  /* cards & panels */
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 22px 24px; margin: 16px 0; box-shadow: var(--shadow); }
+  .panel h2 { font-family: 'IBM Plex Sans', sans-serif; font-size: 19px; margin: 0 0 10px; }
+  .panel p { margin: 8px 0; }
+  .rules { font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; padding-left: 20px; margin: 10px 0; }
+  .rules li { margin: 6px 0; }
+  label.fld { display: block; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600;
+    font-size: 14px; margin: 14px 0 6px; }
+  input[type=text] { width: 100%; max-width: 340px; font: inherit; font-family: 'IBM Plex Sans', sans-serif;
+    padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 8px;
+    background: var(--paper); color: var(--ink); }
+  input[type=text]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+
+  button { font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600;
+    border-radius: 8px; border: 1.5px solid var(--line); background: var(--surface);
+    color: var(--ink); padding: 10px 18px; cursor: pointer; }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  button.quiet { border-color: transparent; background: transparent; color: var(--muted); font-weight: 500; }
+  button:disabled { opacity: .45; cursor: default; }
+  .btnrow { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+  /* questions */
+  .q { background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 18px 20px 14px; margin: 14px 0; box-shadow: var(--shadow); }
+  .q.locked-q { opacity: .82; }
+  .qhead { display: flex; align-items: baseline; gap: 10px; font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .qhead .qn { font-weight: 700; font-size: 15px; color: var(--ink); }
+  .qhead .flags { margin-left: auto; display: flex; gap: 6px; }
+  .tag { font-size: 11px; font-weight: 600; letter-spacing: .05em; padding: 2px 8px;
+    border-radius: 99px; text-transform: uppercase; }
+  .tag.ot-tag { background: transparent; outline: 1.5px dashed var(--lock); color: var(--lock); }
+  .tag.lock-tag { background: var(--line-soft); color: var(--lock); }
+  .passage { margin: 0 0 10px; }
+  .passage p { margin: 0 0 8px; }
+  ul.notes { margin: 6px 0 10px 4px; padding-left: 20px; }
+  ul.notes li { margin: 4px 0; }
+  .qtable-wrap { overflow-x: auto; margin: 10px 0; }
+  .qtable { border-collapse: collapse; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; }
+  .qtable th, .qtable td { border: 1px solid var(--line); padding: 6px 12px; text-align: left; }
+  .qtable th { background: var(--line-soft); font-weight: 600; }
+  .stem { font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-size: 15px; margin: 10px 0; }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin: 0 0 10px; }
+  .choice { display: flex; gap: 12px; align-items: baseline; text-align: left; width: 100%;
+    font-family: 'IBM Plex Serif', Georgia, serif; font-weight: 400; font-size: 16px; line-height: 1.45;
+    padding: 9px 14px; border: 1.5px solid var(--line); border-radius: 8px;
+    background: var(--paper); color: var(--ink); }
+  .choice .cl { font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 14px;
+    color: var(--muted); flex: none; width: 18px; }
+  .choice[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft);
+    box-shadow: inset 0 0 0 1px var(--accent); }
+  .choice[aria-pressed="true"] .cl { color: var(--accent); }
+  .choice[disabled] { cursor: default; }
+  .qfoot { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+  .gbtn { font-size: 13px; font-weight: 600; color: var(--muted); background: transparent;
+    border: 1.5px dashed var(--line); padding: 5px 12px; border-radius: 99px; }
+  .gbtn[aria-pressed="true"] { color: var(--warn); border-color: var(--warn); border-style: solid; }
+
+  .sec-actions { margin: 22px 0; display: flex; justify-content: center; }
+
+  /* modal */
+  .scrim { position: fixed; inset: 0; background: rgba(15,17,22,.55); z-index: 40;
+    display: none; align-items: center; justify-content: center; padding: 20px; }
+  .scrim.open { display: flex; }
+  .modal { background: var(--surface); color: var(--ink); border-radius: 12px; max-width: 460px;
+    width: 100%; padding: 24px 26px; border: 1px solid var(--line); box-shadow: 0 8px 30px rgba(0,0,0,.25); }
+  .modal h2 { font-family: 'IBM Plex Sans', sans-serif; font-size: 20px; margin: 0 0 8px; }
+  .modal p { font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; margin: 8px 0; }
+
+  /* results */
+  .code-box { width: 100%; font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    line-height: 1.5; padding: 12px; border: 1.5px solid var(--line); border-radius: 8px;
+    background: var(--paper); color: var(--ink); min-height: 120px; word-break: break-all; }
+  .stat-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 14px 0; }
+  .stat { flex: 1 1 130px; background: var(--paper); border: 1px solid var(--line);
+    border-radius: 8px; padding: 10px 14px; font-family: 'IBM Plex Sans', sans-serif; }
+  .stat .num { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .copied-note { color: var(--ok); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px;
+    font-weight: 600; visibility: hidden; }
+  .footnote { color: var(--muted); font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; }
+  @media (max-width: 480px) {
+    body { font-size: 16px; }
+    .wrap { padding: 16px 12px 70px; }
+    .q { padding: 14px 14px 12px; }
+    .bar-inner { padding: 8px 12px; gap: 8px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .choice, button { transition: border-color .12s, background .12s; }
+  }
+</style>
+
+<div class="bar" id="bar">
+  <div class="bar-inner">
+    <span class="sec-name" id="bar-sec"></span>
+    <span class="answered" id="bar-answered"></span>
+    <span class="clock" id="bar-clock">--:--</span>
+  </div>
+</div>
+
+<div class="wrap" id="app"></div>
+
+<div class="scrim" id="scrim"><div class="modal" id="modal" role="dialog" aria-modal="true"></div></div>
+
+<script>
+const DATA = {"title":"SAT Diagnostic Test 1","sections":[{"key":"RW","name":"Section 1: Reading and Writing","questions":25,"minutes":30},{"key":"M","name":"Section 2: Math","questions":25,"minutes":40}],"questions":[{"id":"RW1","n":1,"section":"RW","passage":"The community garden project proved remarkably ______: within two years, volunteers had transformed the vacant lot into a productive green space that supplies fresh vegetables to three neighborhood food banks.","stem":"Which choice completes the text with the most logical and precise word or phrase?","choices":["contentious","lucrative","successful","tentative"]},{"id":"RW2","n":2,"section":"RW","passage":"Although the novelist’s early works were praised for their intricate plots, critics found her later books somewhat ______, noting that the storylines had grown thin and predictable.","stem":"Which choice completes the text with the most logical and precise word or phrase?","choices":["convoluted","derivative","ambiguous","insubstantial"]},{"id":"RW3","n":3,"section":"RW","passage":"Marine biologists once assumed that the deep sea floor was largely ______ of life; however, expeditions using submersibles have revealed thriving ecosystems clustered around hydrothermal vents.","stem":"Which choice completes the text with the most logical and precise word or phrase?","choices":["devoid","emblematic","composed","protective"]},{"id":"RW4","n":4,"section":"RW","passage":"The historian’s account of the treaty negotiations is deliberately ______: rather than endorsing any single interpretation, she presents the competing claims of several scholars and allows readers to weigh the evidence themselves.","stem":"Which choice completes the text with the most logical and precise word or phrase?","choices":["polemical","impartial","comprehensive","equivocal"]},{"id":"RW5","n":5,"section":"RW","passage":"The following text is from a 1911 essay about city parks.\n“A city park is not a luxury to be added when all else is complete; it is a necessity of the first order. The park gives to the crowded resident what the countryside gives freely to the farmer — open sky, moving water, and the quiet company of trees.”","stem":"Which choice best describes the function of the second sentence in the text as a whole?","choices":["It offers a concession that qualifies the claim made in the first sentence.","It introduces a counterargument that the author goes on to refute.","It provides historical background on the development of city parks.","It supports the claim made in the first sentence by explaining what parks provide to city dwellers."]},{"id":"RW6","n":6,"section":"RW","passage":["Text 1: Some researchers argue that crop rotation in medieval Europe arose from careful observation and experimentation by farmers, who noticed over generations that alternating crops preserved soil fertility.","Text 2: Written records from medieval estates suggest that crop rotation schedules were typically imposed by landowners following customary rules, with little evidence that individual farmers tested alternatives. Deviating from custom carried real risks, and most farming communities prized conformity over innovation."],"stem":"Based on the texts, how would the author of Text 2 most likely respond to the argument presented in Text 1?","choices":["By agreeing that farmers were the primary innovators but disputing when crop rotation first arose","By asserting that crop rotation had no real effect on soil fertility","By questioning whether individual farmers actually engaged in the experimentation that Text 1 describes","By arguing that written records are unreliable sources of information about medieval farming"]},{"id":"RW7","n":7,"section":"RW","passage":"Octopuses are masters of camouflage, able to change both the color and the texture of their skin in less than a second. Specialized cells called chromatophores expand and contract to alter color, while tiny muscles raise or flatten bumps on the skin, called papillae, to mimic surrounding surfaces such as coral or rock.","stem":"Which choice best states the main idea of the text?","choices":["Octopuses use chromatophores and papillae to change their appearance rapidly.","Chromatophores are the most important cells in an octopus’s body.","Octopuses can camouflage themselves only against coral and rock.","Scientists have only recently discovered how papillae function."]},{"id":"RW8","n":8,"section":"RW","passage":"The following text is from Willa Cather’s 1918 novel My Ántonia. The narrator is recalling his childhood arrival on the Nebraska prairie.\n“As I looked about me I felt that the grass was the country, as the water is the sea. The red of the grass made all the great prairie the colour of wine-stains, or of certain seaweeds when they are first washed up. And there was so much motion in it; the whole country seemed, somehow, to be running.”","stem":"In describing his impression of the prairie, the narrator compares the grass to","choices":["wine spilled across a table.","a running animal.","water in the sea.","a childhood memory."]},{"id":"RW9","n":9,"section":"RW","passage":"In a study of urban heat, researchers found that neighborhoods with less than 10 percent tree-canopy coverage were on average 7°F hotter on summer afternoons than neighborhoods with more than 30 percent coverage. The difference persisted even after the researchers controlled for building density and pavement area, suggesting that the trees themselves — not merely the absence of heat-absorbing surfaces — were responsible for much of the cooling.","stem":"According to the text, why did the researchers control for building density and pavement area?","choices":["To prove that pavement has no effect on neighborhood temperatures","To determine whether the trees themselves, rather than other factors, explained the temperature differences","To measure the exact number of trees in each neighborhood","To compare summer temperatures with winter temperatures"]},{"id":"RW10","n":10,"section":"RW","passage":"Economists have long treated the household as a single decision-making unit, assuming that families pool their resources and act on shared preferences. Yet a growing body of research complicates this picture: studies of spending patterns reveal that which family member controls income can significantly change how money is spent, even when total household income is held constant. Such findings suggest that models treating the household as a unified actor may obscure important dynamics within it.","stem":"Which choice best states the main idea of the text?","choices":["Household income is the most important factor in family spending decisions.","Economists have stopped studying how households make decisions.","Family members always disagree about how money should be spent.","Research on spending patterns challenges the assumption that households act as single, unified decision-makers."]},{"id":"RW11","n":11,"section":"RW","passage":"A student claims that Emily Dickinson’s poetry was largely unknown to the general public during her lifetime.","stem":"Which finding, if true, would most directly support the student’s claim?","choices":["Fewer than a dozen of Dickinson’s nearly 1,800 poems were published before her death in 1886.","Dickinson wrote hundreds of letters to friends and family members.","Dickinson’s poems often explore themes of nature and mortality.","After Dickinson’s death, her sister discovered hundreds of her unpublished poems."]},{"id":"RW12","n":12,"section":"RW","passage":"The table shows the percentage of U.S. adults in a recurring survey who reported reading at least one print book in the previous 12 months.","table":{"headers":["Year","Adults who read a print book"],"rows":[["2011","71%"],["2015","63%"],["2019","65%"],["2021","65%"]]},"stem":"A journalist claims that although print reading declined in the early 2010s, it has remained essentially stable since 2015. Which choice best describes data from the table that support the journalist’s claim?","choices":["The percentage increased every year between 2011 and 2021.","The percentage fell from 71% in 2011 to 63% in 2015, then stayed within two percentage points of that level through 2021.","The percentage in 2021 was higher than the percentage in 2011.","The percentage fell steadily across the entire period shown."]},{"id":"RW13","n":13,"section":"RW","passage":"The fish species Cirrhilabrus finifenmaa lives on “twilight zone” coral reefs — deep zones that receive far less light, and a narrower range of light wavelengths, than shallow reefs do. Researchers hypothesize that the species’ visual system evolved specifically to suit this dim, blue-shifted environment. To evaluate the hypothesis, they plan to compare its light-sensitive eye proteins with those of a closely related shallow-water species.","stem":"Which finding from the planned comparison, if it emerged, would most directly support the researchers’ hypothesis?","choices":["The two species’ eye proteins respond identically across all wavelengths of light.","The deep-water species is more brightly colored than its shallow-water relative.","The shallow-water relative occasionally descends to deeper zones to feed.","The deep-water species’ eye proteins are most sensitive to the blue wavelengths that dominate twilight-zone reefs, while its relative’s are tuned to the broader spectrum of shallow water."]},{"id":"RW14","n":14,"section":"RW","passage":"Most commercial almond orchards depend on honeybees for pollination, and growers typically rent hives during bloom season. Recently, some growers have begun planting self-fertile almond varieties, which can set fruit using their own pollen. Because hive rentals represent one of the largest costs in almond production, growers who adopt self-fertile varieties ______","stem":"Which choice most logically completes the text?","choices":["will no longer need to water their orchards as frequently.","should expect their trees to produce fruit earlier in the season.","may be able to reduce their pollination costs substantially.","must rent additional hives to maintain their yields."]},{"id":"RW15","n":15,"section":"RW","passage":"The archaeologists were initially puzzled: the settlement’s grain-storage pits were far larger than its estimated population could have required — their capacity would have exceeded local needs even in years of exceptional harvest. Excavations then uncovered pottery and ornaments imported from distant regions throughout the site. Taken together, these findings suggest that the settlement ______","stem":"Which choice most logically completes the text?","choices":["was abandoned shortly after its storage pits were built.","may have functioned as a center for trading surplus grain with other regions.","suffered from chronic food shortages.","had a much larger population than archaeologists originally estimated."]},{"id":"RW16","n":16,"section":"RW","passage":"The collection of rare manuscripts, including several medieval illuminated texts, ______ housed in the library’s climate-controlled vault.","stem":"Which choice completes the text so that it conforms to the conventions of Standard English?","choices":["are","were","have been","is"]},{"id":"RW17","n":17,"section":"RW","passage":"Marie Maynard Daly completed her undergraduate degree at Queens ______ in 1947 she became the first African American woman in the United States to earn a Ph.D. in chemistry.","stem":"Which choice completes the text so that it conforms to the conventions of Standard English?","choices":["College;","College,","College","College, for example,"]},{"id":"RW18","n":18,"section":"RW","passage":"By the time the expedition finally reached the summit, the climbers ______ three major storms.","stem":"Which choice completes the text so that it conforms to the conventions of Standard English?","choices":["endure","have endured","had endured","will have endured"]},{"id":"RW19","n":19,"section":"RW","passage":"Determined to reduce lunchtime plastic waste, ______","stem":"Which choice completes the text so that it conforms to the conventions of Standard English?","choices":["the cafeteria staff introduced reusable containers.","reusable containers were introduced by the cafeteria staff.","the introduction of reusable containers was the staff’s solution.","reusable containers became official school policy."]},{"id":"RW20","n":20,"section":"RW","passage":"Chien-Shiung Wu, a physicist who made crucial contributions to twentieth-century science ______ designed the experiment that disproved the principle known as the conservation of parity.","stem":"Which choice completes the text so that it conforms to the conventions of Standard English?","choices":["science;","science —","science","science,"]},{"id":"RW21","n":21,"section":"RW","passage":"Because it regrows rapidly from its roots after being harvested, bamboo can be cut again and again without replanting. ______ it is increasingly promoted as a sustainable alternative to slow-growing hardwoods.","stem":"Which choice completes the text with the most logical transition?","choices":["In contrast,","For this reason,","Nevertheless,","By comparison,"]},{"id":"RW22","n":22,"section":"RW","passage":"Early automobiles were unreliable and expensive, and many people dismissed them as playthings for the wealthy. ______ some inventors believed that with standardized parts and efficient assembly, cars could become affordable to ordinary families.","stem":"Which choice completes the text with the most logical transition?","choices":["Similarly,","Therefore,","For example,","Even so,"]},{"id":"RW23","n":23,"section":"RW","passage":"While researching a topic, a student has taken the following notes:","notes":["The Great Pacific Garbage Patch is a region of the North Pacific Ocean with high concentrations of floating plastic debris.","Much of the debris consists of microplastics: plastic particles smaller than 5 millimeters.","Nets fine enough to catch microplastics also trap marine organisms.","The nonprofit Ocean Cleanup has designed systems intended to collect larger debris before it breaks down into microplastics."],"stem":"The student wants to explain why microplastics in the patch are difficult to remove. Which choice most effectively uses relevant information from the notes to accomplish this goal?","choices":["The Great Pacific Garbage Patch is a region of the North Pacific Ocean with high concentrations of floating plastic debris.","The Ocean Cleanup has designed systems intended to collect larger debris from the patch.","Microplastics — plastic particles smaller than 5 millimeters — are difficult to remove because nets fine enough to catch them also trap marine organisms.","Much of the debris in the Great Pacific Garbage Patch consists of microplastics."]},{"id":"RW24","n":24,"section":"RW","passage":"While researching a topic, a student has taken the following notes:","notes":["Mae Jemison became the first African American woman to travel to space in 1992, aboard the shuttle Endeavour.","Before joining NASA, she worked as a physician and served in the Peace Corps in Liberia and Sierra Leone.","After leaving NASA in 1993, she founded a technology research company.","She also created an international science camp for students."],"stem":"The student wants to emphasize the range of Jemison’s accomplishments beyond her spaceflight. Which choice most effectively uses relevant information from the notes to accomplish this goal?","choices":["Beyond her historic 1992 spaceflight, Jemison has worked as a physician, served in the Peace Corps, founded a technology research company, and created an international science camp for students.","In 1992, Mae Jemison became the first African American woman to travel to space.","Mae Jemison flew aboard the space shuttle Endeavour in 1992.","After leaving NASA in 1993, Mae Jemison pursued a variety of other projects."]},{"id":"RW25","n":25,"section":"RW","passage":"In the 1950s, many linguists assumed that children learn language primarily by imitating adult speech. Children, however, routinely produce forms they have never heard an adult use — saying “goed” instead of “went,” for instance. ______ imitation alone cannot fully explain how children acquire language.","stem":"Which choice completes the text with the most logical transition?","choices":["Likewise,","Specifically,","Evidently,","Meanwhile,"]},{"id":"M1","n":1,"section":"M","stem":"If 3x + 7 = 25, what is the value of x?","choices":["4","6","8","9"]},{"id":"M2","n":2,"section":"M","passage":"The equation C = 25h + 60 gives the total cost C, in dollars, of renting a kayak for h hours, including a one-time deposit.","stem":"What is the best interpretation of the number 25 in this context?","choices":["The deposit is $25.","The total cost of the rental is $25.","The kayak can be rented for a maximum of 25 hours.","The rental costs $25 per hour."]},{"id":"M3","n":3,"section":"M","stem":"If 4(x − 3) = 2x + 10, what is the value of x?","choices":["−1","5.5","11","22"]},{"id":"M4","n":4,"section":"M","passage":"2x + y = 11\nx − y = 1","stem":"The solution to the given system of equations is (x, y). What is the value of x?","choices":["3","4","7","12"]},{"id":"M5","n":5,"section":"M","passage":"A phone plan costs $30 per month plus $0.10 per gigabyte of data used. Keisha wants her monthly bill to be at most $45.","stem":"Which inequality represents the number of gigabytes of data g that Keisha can use in a month?","choices":["30 + 0.10g ≤ 45","30g + 0.10 ≤ 45","0.10(30 + g) ≤ 45","30 + 0.10g ≥ 45"]},{"id":"M6","n":6,"section":"M","stem":"A line in the xy-plane passes through the points (2, 5) and (6, 13). Which equation defines the line?","choices":["y = 4x − 3","y = ½x + 4","y = 2x − 1","y = 2x + 1"]},{"id":"M7","n":7,"section":"M","passage":"3x + ky = 8\n6x + 10y = 7","stem":"In the given system of equations, k is a constant. For what value of k does the system have no solution?","choices":["3","5","10","20"]},{"id":"M8","n":8,"section":"M","passage":"A landscaper charges a flat fee plus a fixed hourly rate. A 3-hour job costs $205, and a 7-hour job costs $445.","stem":"What is the flat fee?","choices":["$25","$60","$85","$145"]},{"id":"M9","n":9,"section":"M","stem":"Which of the following is equivalent to x² − 9x + 18?","choices":["(x + 3)(x + 6)","(x − 3)(x − 6)","(x − 2)(x − 9)","(x − 1)(x − 18)"]},{"id":"M10","n":10,"section":"M","stem":"What are the solutions to the equation x² − 5x − 14 = 0?","choices":["x = −7 and x = 2","x = 5 and x = 14","x = 7 and x = 2","x = 7 and x = −2"]},{"id":"M11","n":11,"section":"M","passage":"The function f is defined by f(x) = 2x² − 3x + 1.","stem":"What is the value of f(−2)?","choices":["−1","3","15","19"]},{"id":"M12","n":12,"section":"M","passage":"A bacteria population starts at 500 and doubles every 3 hours.","stem":"Which equation models the population P after t hours?","choices":["P = 500 · 2\u003csup>t/3\u003c/sup>","P = 500 · 2\u003csup>3t\u003c/sup>","P = 500 + 2\u003csup>t/3\u003c/sup>","P = 2 · 500\u003csup>t/3\u003c/sup>"]},{"id":"M13","n":13,"section":"M","passage":"x\u003csup>a\u003c/sup> · x⁴ = x¹² and (x\u003csup>b\u003c/sup>)³ = x¹⁵","stem":"In the given equations, x > 1 and a and b are constants. What is the value of a + b?","choices":["8","11","12","13"]},{"id":"M14","n":14,"section":"M","passage":"A ball is launched upward, and its height in feet after t seconds is given by h(t) = −16t² + 64t + 5.","stem":"What is the maximum height, in feet, that the ball reaches?","choices":["5","64","69","128"]},{"id":"M15","n":15,"section":"M","stem":"What is the solution set of the equation √(x + 7) = x − 5?","choices":["{2}","{2, 9}","{−2, −9}","{9}"]},{"id":"M16","n":16,"section":"M","passage":"A jacket originally priced at $80 is on sale for 25% off.","stem":"What is the sale price of the jacket?","choices":["$20","$55","$60","$75"]},{"id":"M17","n":17,"section":"M","passage":"A recipe that makes 12 muffins calls for 3 cups of flour.","stem":"How many cups of flour are needed to make 20 muffins with this recipe?","choices":["4","5","6","8"]},{"id":"M18","n":18,"section":"M","passage":"A data set consists of the values 3, 7, 7, 8, 10, 13. The value 13 is replaced with 25 to form a new data set.","stem":"Which statement correctly compares the new data set with the original?","choices":["The mean and the median both increase.","The mean stays the same, and the median increases.","The mean and the median both stay the same.","The mean increases, and the median stays the same."]},{"id":"M19","n":19,"section":"M","passage":"A car travels at a constant speed of 54 miles per hour.","stem":"How many miles does the car travel in 40 minutes?","choices":["21.6","27","32.4","36"]},{"id":"M20","n":20,"section":"M","passage":"The table summarizes how 200 surveyed students get to school.","table":{"headers":["","Walk","Bus","Total"],"rows":[["Juniors","30","45","75"],["Seniors","50","75","125"],["Total","80","120","200"]]},"stem":"If one of the surveyed students is selected at random, what is the probability that the student is a senior who walks to school?","choices":["1/4","2/5","5/8","3/4"]},{"id":"M21","n":21,"section":"M","passage":"After increasing by 20%, the price of a share of a certain stock is $84.","stem":"What was the price of the share before the increase?","choices":["$64.00","$67.20","$70.00","$76.80"]},{"id":"M22","n":22,"section":"M","passage":"Two angles of a triangle measure 35° and 65°.","stem":"What is the measure of the third angle?","choices":["70°","80°","90°","100°"]},{"id":"M23","n":23,"section":"M","passage":"A circle has an area of 49π square centimeters.","stem":"What is the circumference of the circle, in centimeters?","choices":["7π","14π","49π","98π"]},{"id":"M24","n":24,"section":"M","passage":"A 13-foot ladder leans against a vertical wall, with its base 5 feet from the bottom of the wall on level ground.","stem":"How far up the wall, in feet, does the ladder reach?","choices":["8","10","12","√194"]},{"id":"M25","n":25,"section":"M","passage":"In right triangle ABC, the right angle is at C, and sin A = 3/5.","stem":"What is the value of cos B?","choices":["3/5","3/4","4/5","5/3"]}]};
+const KEY = "sat-diag-01";
+const DEV = /[?&]dev\b/.test(location.search);
+const $ = (id) => document.getElementById(id);
+const LET = ["A","B","C","D"];
+const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+function secMinutes(sec) { return DEV ? 0.5 : sec.minutes; }
+function secByKey(k) { return DATA.sections.find((s) => s.key === k); }
+function qsOf(k) { return DATA.questions.filter((q) => q.section === k); }
+
+// ---------- state ----------
+let S = load();
+function fresh() {
+  return { v: 1, name: "", phase: "intro", restarts: 0, testStarted: null, finished: null,
+    started: {}, deadlines: {}, lockedAt: {}, overtime: {}, answers: {} };
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) { const s = JSON.parse(raw); if (s && s.v === 1) return s; }
+  } catch (e) {}
+  return fresh();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+// ---------- helpers ----------
+function isTimedPhase() { return S.phase === "RW" || S.phase === "M"; }
+function curSec() { return isTimedPhase() ? secByKey(S.phase) : null; }
+function isLocked(k) { return S.lockedAt[k] != null; }
+function inOvertime(k) { return isLocked(k) && S.overtime[k] && S.phase === k; }
+function answeredCount(k) { return qsOf(k).filter((q) => S.answers[q.id] && S.answers[q.id].a).length; }
+function remaining(k) { return Math.max(0, S.deadlines[k] - Date.now()); }
+function fmt(ms) {
+  const t = Math.ceil(ms / 1000), m = Math.floor(t / 60), s = t % 60;
+  return m + ":" + String(s).padStart(2, "0");
+}
+
+// ---------- rendering ----------
+function render() {
+  clearInterval(render._tick); render._tick = null;
+  const app = $("app");
+  if (S.phase === "intro") app.innerHTML = introView();
+  else if (S.phase === "break") app.innerHTML = breakView();
+  else if (S.phase === "done") app.innerHTML = doneView();
+  else app.innerHTML = sectionView(S.phase);
+  bindEvents();
+  updateBar();
+  if (isTimedPhase() && !isLocked(S.phase)) render._tick = setInterval(tick, 250);
+}
+
+function introView() {
+  const resuming = S.testStarted && !S.finished;
+  const rw = secByKey("RW"), m = secByKey("M");
+  return `
+  <h1>${esc(DATA.title)}</h1>
+  <p class="sub">50 questions &middot; two timed sections &middot; taken in one sitting</p>
+  <div class="panel">
+    <h2>${resuming ? "Welcome back" : "Before you start"}</h2>
+    <ul class="rules">
+      <li><b>Section 1: Reading &amp; Writing</b> — ${rw.questions} questions, <b>${secMinutes(rw)} minutes</b>.</li>
+      <li><b>Section 2: Math</b> — ${m.questions} questions, <b>${secMinutes(m)} minutes</b>. A calculator is allowed for the whole Math section.</li>
+      <li>There's a short break between sections. The Math timer doesn't start until you click.</li>
+      <li>Answer every question — <b>there is no penalty for wrong answers</b>.</li>
+      <li>If you guess on a question, tap its <b>G</b> button (even if you're partly sure). Be honest — it helps your tutor help you.</li>
+      <li>When time runs out, the section locks. You'll then have the option to finish any unanswered questions untimed — those are recorded separately.</li>
+      <li><b>The clock keeps running even if you close this page</b>, so start when you have a quiet stretch of time.</li>
+    </ul>
+    ${resuming ? `
+      <p><b>${esc(S.name)}</b>, your test is in progress. Pick up where you left off.</p>
+      <div class="btnrow">
+        <button class="primary" id="resume-btn">Resume test</button>
+        <button class="quiet" id="restart-btn">Start over</button>
+      </div>` : `
+      <label class="fld" for="name-in">Your name</label>
+      <input type="text" id="name-in" autocomplete="off" value="${esc(S.name)}">
+      <div class="btnrow">
+        <button class="primary" id="start-btn">Start Section 1 — timer begins now</button>
+      </div>`}
+  </div>`;
+}
+
+function sectionView(k) {
+  const sec = secByKey(k);
+  const locked = isLocked(k), ot = inOvertime(k);
+  const qs = qsOf(k);
+  let html = `<h1>${esc(sec.name)}</h1>
+    <p class="sub">${sec.questions} questions &middot; ${secMinutes(sec)} minutes${k === "M" ? " &middot; calculator allowed" : ""}${ot ? " &middot; <b>overtime — untimed</b>" : ""}</p>`;
+  html += qs.map((q) => questionCard(q, locked, ot)).join("");
+  const blanks = qs.length - answeredCount(k);
+  const otOffer = locked && !ot && blanks > 0
+    ? `<button id="enter-ot">Answer the ${blanks} remaining untimed</button>` : "";
+  html += `<div class="sec-actions" style="gap:10px">${otOffer}
+    <button id="finish-sec" class="${ot || locked ? "primary" : ""}">
+      ${locked ? (k === "RW" ? "Done — go to break" : "Done — finish test") : "I'm finished with this section"}
+    </button></div>`;
+  return html;
+}
+
+function questionCard(q, locked, ot) {
+  const a = S.answers[q.id] || {};
+  const frozen = locked && !(ot && (!a.a || a.o)); // in overtime only blank/overtime answers are editable
+  const flags = [];
+  if (a.o) flags.push(`<span class="tag ot-tag">overtime</span>`);
+  if (locked && !ot && !a.a) flags.push(`<span class="tag lock-tag">blank</span>`);
+  let b = `<div class="q ${frozen ? "locked-q" : ""}" id="${q.id}">
+    <div class="qhead"><span class="qn">${q.n}.</span><span class="flags">${flags.join("")}</span></div>`;
+  if (q.passage) b += `<div class="passage">${(Array.isArray(q.passage) ? q.passage : [q.passage]).map((p) => `<p>${p}</p>`).join("")}</div>`;
+  if (q.table) {
+    b += `<div class="qtable-wrap"><table class="qtable"><tr>${q.table.headers.map((h) => `<th>${h}</th>`).join("")}</tr>`;
+    b += q.table.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("");
+    b += `</table></div>`;
+  }
+  if (q.notes) b += `<ul class="notes">${q.notes.map((nt) => `<li>${nt}</li>`).join("")}</ul>`;
+  b += `<div class="stem">${q.stem}</div><div class="choices">`;
+  b += q.choices.map((c, i) =>
+    `<button class="choice" data-q="${q.id}" data-l="${LET[i]}" aria-pressed="${a.a === LET[i]}" ${frozen ? "disabled" : ""}>
+      <span class="cl">${LET[i]}</span><span>${c}</span></button>`).join("");
+  b += `</div><div class="qfoot">
+    <button class="gbtn" data-g="${q.id}" aria-pressed="${!!a.g}" ${frozen ? "disabled" : ""} title="Mark if you guessed">G &middot; I guessed</button>
+  </div></div>`;
+  return b;
+}
+
+function breakView() {
+  const m = secByKey("M");
+  return `<h1>Break</h1><p class="sub">Section 1 is turned in and locked.</p>
+  <div class="panel">
+    <h2>Take a few minutes</h2>
+    <p>Stretch, get water. When you're ready, start the Math section — <b>${secMinutes(m)} minutes</b>, calculator allowed. The timer doesn't run during the break.</p>
+    <div class="btnrow"><button class="primary" id="start-m">Start Section 2 — timer begins now</button></div>
+  </div>`;
+}
+
+function doneView() {
+  const code = resultsCode();
+  const g = Object.values(S.answers).filter((a) => a.g).length;
+  const o = Object.values(S.answers).filter((a) => a.o && a.a).length;
+  return `<h1>All done${S.name ? ", " + esc(S.name) : ""} 🎉</h1>
+  <p class="sub">Nice work staying with it. One last step below.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="num">${answeredCount("RW")}/25</div><div class="lbl">Reading &amp; Writing</div></div>
+    <div class="stat"><div class="num">${answeredCount("M")}/25</div><div class="lbl">Math</div></div>
+    <div class="stat"><div class="num">${g}</div><div class="lbl">Marked as guesses</div></div>
+    <div class="stat"><div class="num">${o}</div><div class="lbl">Overtime answers</div></div>
+  </div>
+  <div class="panel">
+    <h2>Send your results to your tutor</h2>
+    <p>Copy the code below and text or email it to your tutor. That's it — scoring happens on their end, so this page doesn't show right or wrong answers.</p>
+    <textarea class="code-box" id="code-box" readonly>${code}</textarea>
+    <div class="btnrow">
+      <button class="primary" id="copy-btn">Copy results code</button>
+      <span class="copied-note" id="copied-note">Copied ✓</span>
+    </div>
+  </div>
+  <p class="footnote">Leave this page open until you've sent the code. (It also stays saved in this browser.)</p>`;
+}
+
+// ---------- results ----------
+function resultsCode() {
+  const a = {}, g = [], o = [];
+  for (const q of DATA.questions) {
+    const r = S.answers[q.id];
+    if (r && r.a) a[q.id] = r.a;
+    if (r && r.g) g.push(q.id);
+    if (r && r.o && r.a) o.push(q.id);
+  }
+  const payload = { v: 1, test: "sat-diag-01", name: S.name, dev: DEV || undefined,
+    restarts: S.restarts,
+    t: { start: S.testStarted, finish: S.finished,
+      RW: { start: S.started.RW, lock: S.lockedAt.RW, deadline: S.deadlines.RW, ot: !!S.overtime.RW },
+      M: { start: S.started.M, lock: S.lockedAt.M, deadline: S.deadlines.M, ot: !!S.overtime.M } },
+    a, g, o };
+  return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+}
+
+// ---------- timer ----------
+function tick() {
+  if (!isTimedPhase()) return;
+  const k = S.phase;
+  if (isLocked(k)) return;
+  if (remaining(k) <= 0) { expire(k); return; }
+  updateBar();
+}
+function expire(k) {
+  S.lockedAt[k] = Math.min(Date.now(), S.deadlines[k] + 0); save();
+  render();
+  showModal(`
+    <h2>Time's up — Section ${k === "RW" ? "1" : "2"} is locked</h2>
+    <p>Your timed answers are frozen. If any questions are blank, you can finish them <b>untimed</b> — they're recorded separately, so it's still useful. Or head straight on.</p>
+    <div class="btnrow">
+      <button class="primary" id="md-ot">Finish unanswered questions untimed</button>
+      <button id="md-next">${k === "RW" ? "Go to break" : "Finish test"}</button>
+    </div>`);
+  $("md-ot").onclick = () => { S.overtime[k] = true; save(); hideModal(); render(); window.scrollTo(0, 0); };
+  $("md-next").onclick = () => { hideModal(); advance(k); };
+}
+function advance(k) {
+  if (k === "RW") S.phase = "break";
+  else { S.phase = "done"; S.finished = Date.now(); }
+  save(); render(); window.scrollTo(0, 0);
+}
+
+// ---------- bar ----------
+function updateBar() {
+  const bar = $("bar");
+  if (!isTimedPhase()) { bar.style.display = "none"; return; }
+  bar.style.display = "block";
+  const k = S.phase, sec = curSec();
+  $("bar-sec").textContent = sec.name.replace(/^Section \d+: /, "Section " + (k === "RW" ? "1" : "2") + " · ");
+  $("bar-answered").textContent = answeredCount(k) + "/" + sec.questions + " answered";
+  const clock = $("bar-clock");
+  if (inOvertime(k)) { clock.className = "clock ot"; clock.textContent = "OVERTIME"; return; }
+  if (isLocked(k)) { clock.className = "clock ot"; clock.textContent = "LOCKED"; return; }
+  const ms = remaining(k);
+  clock.textContent = fmt(ms);
+  clock.className = "clock" + (ms <= 60000 ? " danger" : ms <= 300000 ? " warn" : "");
+}
+
+// ---------- events ----------
+function bindEvents() {
+  const start = $("start-btn");
+  if (start) start.onclick = () => {
+    const name = $("name-in").value.trim();
+    if (!name) { $("name-in").focus(); $("name-in").style.borderColor = "var(--danger)"; return; }
+    S.name = name;
+    if (!S.testStarted) S.testStarted = Date.now();
+    startSection("RW");
+  };
+  const resume = $("resume-btn");
+  if (resume) resume.onclick = () => { S.phase = S._resumePhase || "RW"; save(); render(); };
+  const restart = $("restart-btn");
+  if (restart) restart.onclick = () => {
+    showModal(`<h2>Start over?</h2><p>This erases the in-progress attempt on this device. Restarts are visible to your tutor.</p>
+      <div class="btnrow"><button class="primary" id="md-yes">Yes, start over</button><button id="md-no">Cancel</button></div>`);
+    $("md-yes").onclick = () => { const r = S.restarts + 1; S = fresh(); S.restarts = r; save(); hideModal(); render(); };
+    $("md-no").onclick = hideModal;
+  };
+  const startM = $("start-m");
+  if (startM) startM.onclick = () => startSection("M");
+  const enterOt = $("enter-ot");
+  if (enterOt) enterOt.onclick = () => { S.overtime[S.phase] = true; save(); render(); window.scrollTo(0, 0); };
+  const fin = $("finish-sec");
+  if (fin) fin.onclick = () => {
+    const k = S.phase;
+    if (isLocked(k)) { advance(k); return; }
+    const blanks = qsOf(k).length - answeredCount(k);
+    showModal(`<h2>Turn in Section ${k === "RW" ? "1" : "2"}?</h2>
+      <p>${blanks ? `You still have <b>${blanks} unanswered</b> question${blanks > 1 ? "s" : ""} and time on the clock. Blank answers can't earn points.` : "All questions answered."} Once turned in, this section locks for good.</p>
+      <div class="btnrow"><button class="primary" id="md-yes">Turn it in</button><button id="md-no">Keep working</button></div>`);
+    $("md-yes").onclick = () => { S.lockedAt[k] = Date.now(); save(); hideModal(); advance(k); };
+    $("md-no").onclick = hideModal;
+  };
+  document.querySelectorAll(".choice").forEach((btn) => {
+    btn.onclick = () => pickAnswer(btn.dataset.q, btn.dataset.l);
+  });
+  document.querySelectorAll(".gbtn").forEach((btn) => {
+    btn.onclick = () => toggleGuess(btn.dataset.g);
+  });
+  const copy = $("copy-btn");
+  if (copy) copy.onclick = () => {
+    const box = $("code-box");
+    box.select(); box.setSelectionRange(0, 999999);
+    const show = () => { $("copied-note").style.visibility = "visible"; };
+    if (navigator.clipboard && navigator.clipboard.writeText)
+      navigator.clipboard.writeText(box.value).then(show, () => { document.execCommand("copy"); show(); });
+    else { document.execCommand("copy"); show(); }
+  };
+}
+
+function startSection(k) {
+  S.started[k] = Date.now();
+  S.deadlines[k] = Date.now() + secMinutes(secByKey(k)) * 60000;
+  S.phase = k; save(); render(); window.scrollTo(0, 0);
+}
+
+function editable(qid) {
+  const q = DATA.questions.find((x) => x.id === qid);
+  if (!q || q.section !== S.phase) return false;
+  const k = q.section;
+  if (!isLocked(k)) return true;
+  if (!inOvertime(k)) return false;
+  const a = S.answers[qid];
+  return !a || !a.a || !!a.o; // overtime: only blank or overtime-entered answers
+}
+function pickAnswer(qid, letter) {
+  if (!editable(qid)) return;
+  const k = S.phase;
+  const a = S.answers[qid] || (S.answers[qid] = {});
+  a.a = a.a === letter ? null : letter;
+  if (a.a && inOvertime(k)) a.o = true;
+  if (!a.a) delete a.o;
+  a.t = Date.now(); save();
+  refreshCard(qid);
+  updateBar();
+}
+function toggleGuess(qid) {
+  if (!editable(qid)) return;
+  const a = S.answers[qid] || (S.answers[qid] = {});
+  a.g = !a.g; a.t = Date.now(); save();
+  refreshCard(qid);
+}
+function refreshCard(qid) {
+  const q = DATA.questions.find((x) => x.id === qid);
+  const el = $(qid);
+  if (!q || !el) return;
+  const holder = document.createElement("div");
+  holder.innerHTML = questionCard(q, isLocked(q.section), inOvertime(q.section));
+  el.replaceWith(holder.firstElementChild);
+  const el2 = $(qid);
+  el2.querySelectorAll(".choice").forEach((btn) => { btn.onclick = () => pickAnswer(btn.dataset.q, btn.dataset.l); });
+  el2.querySelectorAll(".gbtn").forEach((btn) => { btn.onclick = () => toggleGuess(btn.dataset.g); });
+}
+
+// ---------- modal ----------
+function showModal(html) { $("modal").innerHTML = html; $("scrim").classList.add("open"); }
+function hideModal() { $("scrim").classList.remove("open"); }
+
+// ---------- boot ----------
+(function boot() {
+  if (isTimedPhase()) {
+    // returning mid-section: keep phase, but note it for the resume screen
+    S._resumePhase = S.phase;
+    if (!isLocked(S.phase) && remaining(S.phase) <= 0) {
+      // deadline passed while away
+      S.lockedAt[S.phase] = S.deadlines[S.phase]; save();
+    }
+    S.phase = "intro"; // show welcome-back screen; Resume returns to section
+  } else if (S.phase === "break") {
+    S._resumePhase = "break";
+    if (S.testStarted && !S.finished) S.phase = "intro";
+  }
+  render();
+})();
+</script>
+</body></html>
