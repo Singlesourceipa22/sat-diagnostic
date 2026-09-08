@@ -214,8 +214,11 @@ function syncLesson(lessonId) {
   if (!SYNC) return;
   ST.pendingLessons.push({ lessonId, ts: Date.now() }); save(); flushPending();
 }
+let FLUSHING = false, FLUSH_AGAIN = false; // in-flight guard: overlapping flushes would re-post the same session
 function flushPending() {
   if (!SYNC) return;
+  if (FLUSHING) { FLUSH_AGAIN = true; return; }
+  FLUSHING = true;
   const post = (path, body, onOk) =>
     fetch(SYNC.url + path, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(body) })
       .then((r) => { if (r.ok) { onOk(); save(); } }).catch(() => {});
@@ -224,7 +227,8 @@ function flushPending() {
     chain = chain.then(() => post("/api/session", { k: SYNC.k, student: STUDENT, session: p }, () => { ST.pending = ST.pending.filter((x) => x !== p); }));
   for (const p of ST.pendingLessons.slice(0, 8))
     chain = chain.then(() => post("/api/lesson", { k: SYNC.k, student: STUDENT, lessonId: p.lessonId }, () => { ST.pendingLessons = ST.pendingLessons.filter((x) => x !== p); }));
-  chain.then(fetchState).then(() => { if (VIEW === "home") renderHome(); });
+  chain.then(fetchState).then(() => { if (VIEW === "home") renderHome(); }).catch(() => {})
+    .finally(() => { FLUSHING = false; if (FLUSH_AGAIN) { FLUSH_AGAIN = false; flushPending(); } });
 }
 
 // review queue merges server truth with optimistic local completions
